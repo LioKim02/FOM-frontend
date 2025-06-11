@@ -10,6 +10,7 @@ import axios from "axios";
 import HomeButton from "../components/HomeButton";
 import Settings from "../components/Settings";
 import PreviousArrow from "../components/PreviousArrow";
+import chevronLeft from "../assets/images/chevron-left0.svg";
 import { UserContext } from "./UserContext";
 import { useNavigate, useLocation } from "react-router-dom";
 import Smiley from "../assets/images/image-50.png";
@@ -234,7 +235,7 @@ const CalendarPage = () => {
             return;
         }
 
-        setDiaryPopupContent([{ content: "포미의 한마디를 생성 중입니다..." }]);
+        setDiaryPopupContent([{ content: "포미의 한마디 생성 중..." }]);
         setIsLoading(true);
         try {
             const res = await axios.post(
@@ -254,9 +255,7 @@ const CalendarPage = () => {
                 ]);
             }
         } catch {
-            setDiaryPopupContent([
-                { content: "포미의 한마디 생성에 실패했습니다." },
-            ]);
+            setDiaryPopupContent([{ content: "포미의 한마디 생성 실패" }]);
         } finally {
             setIsLoading(false);
         }
@@ -350,6 +349,7 @@ const CalendarPage = () => {
 
     /* ─────────────── 렌더링 ─────────────── */
     /* ---- 캘린더 테이블 (위에서 calendarRows 계산) ---- */
+    const todayWeekdayIndex = new Date().getDay();
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth();
     const firstDay = new Date(year, month, 1).getDay();
@@ -420,7 +420,7 @@ const CalendarPage = () => {
                                 }
                             >
                                 {Array.from(
-                                    { length: 100 },
+                                    { length: 26 },
                                     (_, i) => year - i
                                 ).map((y) => (
                                     <option key={y}>{y}</option>
@@ -459,11 +459,21 @@ const CalendarPage = () => {
                     <table>
                         <thead>
                             <tr>
-                                {DAYS.map((d) => (
-                                    <th key={d}>{d}</th>
+                                {DAYS.map((d, i) => (
+                                    <th
+                                        key={d}
+                                        className={
+                                            i === todayWeekdayIndex
+                                                ? styles.todayWeekday
+                                                : undefined
+                                        }
+                                    >
+                                        {d}
+                                    </th>
                                 ))}
                             </tr>
                         </thead>
+
                         <tbody>{calendarRows}</tbody>
                     </table>
                 </div>
@@ -549,19 +559,18 @@ const CalendarPage = () => {
 
             {/* ───── 일기/상담 팝업 ───── */}
             {selectedDate && (
-                <div className={styles["diary-popup-overlay"]}>
-                    <div className={styles["diary-popup"]}>
-                        <button
-                            className={styles["popup-close-button"]}
-                            onClick={() => setSelectedDate(null)}
-                        >
-                            ×
-                        </button>
-
+                <div
+                    className={styles["diary-popup-overlay"]}
+                    onClick={() => setSelectedDate(null)} // ✅ 오버레이 클릭 시 닫힘
+                >
+                    <div
+                        className={styles["diary-popup"]}
+                        onClick={(e) => e.stopPropagation()} // ✅ 팝업 내부 클릭 시 전파 차단
+                    >
                         <div className={styles["popup-header"]}>
-                            {isConsulting && (
+                            {isConsulting ? (
                                 <button
-                                    className={styles["popup-back-button"]}
+                                    className={`${styles["popup-back-button"]} ${styles["popup-close-button"]}`}
                                     onClick={() => {
                                         setIsConsulting(false);
                                         setDiaryPopupContent(
@@ -569,17 +578,33 @@ const CalendarPage = () => {
                                         );
                                     }}
                                 >
-                                    &lt;
+                                    <img
+                                        src={chevronLeft}
+                                        alt="뒤로가기"
+                                        className={styles["popup-icon"]}
+                                    />
                                 </button>
+                            ) : (
+                                <div style={{ width: "24px" }} />
                             )}
-                            <div className={styles["popup-title"]}>
-                                {selectedDate}
-                            </div>
-                            {isConsulting && (
-                                <div className={styles["popup-subtitle"]}>
-                                    포미의 한마디
+
+                            <div className={styles["popup-title-area"]}>
+                                <div className={styles["popup-title"]}>
+                                    {selectedDate}
                                 </div>
-                            )}
+                                {isConsulting && (
+                                    <div className={styles["popup-subtitle"]}>
+                                        포미의 한마디
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* <button
+                className={styles["popup-close-button"]}
+                onClick={() => setSelectedDate(null)}
+              >
+                x
+              </button> */}
                         </div>
 
                         <div className={styles["popup-content"]}>
