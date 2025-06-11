@@ -55,7 +55,7 @@ const CalendarPage = () => {
     const navigate = useNavigate();
 
     /* ------- states ------- */
-    
+
     const [emotionData, setEmotionData] = useState([]);
     const [currentDate, setCurrentDate] = useState(new Date());
 
@@ -98,7 +98,7 @@ const CalendarPage = () => {
         psyCache.current = {};
     }, [user]);
 
-    //  팝업/삭제 확인창 등장 시 스크롤 제어 (주찬님 코드) 
+    //  팝업/삭제 확인창 등장 시 스크롤 제어 (주찬님 코드)
     useEffect(() => {
         if (showDeleteConfirm) {
             document.body.style.overflow = "hidden";
@@ -109,42 +109,45 @@ const CalendarPage = () => {
         return () => {
             document.body.style.overflow = "auto";
         };
-        }, [showDeleteConfirm, selectedDate]);
+    }, [showDeleteConfirm, selectedDate]);
 
     /* ──────────────── 데이터: 주간 감정 ──────────────── */
     useEffect(() => {
-    if (!user) return;
+        if (!user) return;
 
-    setIsLoading(true);
+        setIsLoading(true);
 
-    // 오늘 날짜 계산
-    const today = new Date();
-    const yyyy = today.getFullYear();
-    const mm = String(today.getMonth() + 1).padStart(2, "0");
-    const dd = String(today.getDate()).padStart(2, "0");
-    // 7일 전 날짜 계산
-    const start = new Date(today);
-    start.setDate(today.getDate() - 6);
-    const startYyyy = start.getFullYear();
-    const startMm = String(start.getMonth() + 1).padStart(2, "0");
-    const startDd = String(start.getDate()).padStart(2, "0");
+        // 오늘 날짜 계산
+        const today = new Date();
+        const yyyy = today.getFullYear();
+        const mm = String(today.getMonth() + 1).padStart(2, "0");
+        const dd = String(today.getDate()).padStart(2, "0");
+        // 7일 전 날짜 계산
+        const start = new Date(today);
+        start.setDate(today.getDate() - 6);
+        const startYyyy = start.getFullYear();
+        const startMm = String(start.getMonth() + 1).padStart(2, "0");
+        const startDd = String(start.getDate()).padStart(2, "0");
 
-    // API 파라미터: 250603(6월 3일)250609(6월 9일)
-    const selected_date = `${String(startYyyy).slice(2)}${startMm}${startDd}${String(yyyy).slice(2)}${mm}${dd}`;
+        // API 파라미터: 250603(6월 3일)250609(6월 9일)
+        const selected_date = `${String(startYyyy).slice(
+            2
+        )}${startMm}${startDd}${String(yyyy).slice(2)}${mm}${dd}`;
 
-    axios.get("https://fombackend.azurewebsites.net/api/emotion/read", {
-        params: {
-            user_id: user.user_id,
-            selected_date,
-        },
-    })
-    .then(res => {
-        // res.data: [{...created_at: "2025-06-03T.."}, ...]
-        setEmotionData(res.data);
-    })
-    .catch(() => setEmotionData([]))
-    .finally(() => setIsLoading(false));
-}, [user, setIsLoading]);
+        axios
+            .get("https://fombackend.azurewebsites.net/api/emotion/read", {
+                params: {
+                    user_id: user.user_id,
+                    selected_date,
+                },
+            })
+            .then((res) => {
+                // res.data: [{...created_at: "2025-06-03T.."}, ...]
+                setEmotionData(res.data);
+            })
+            .catch(() => setEmotionData([]))
+            .finally(() => setIsLoading(false));
+    }, [user, setIsLoading]);
 
     /* ──────────────── 팝업 로직 공통 함수 ──────────────── */
     const openPopup = useCallback(
@@ -270,7 +273,8 @@ const CalendarPage = () => {
                     { content: draftText }
                 );
             } else {
-                const createUrl = "https://fombackend.azurewebsites.net/api/diary/create";
+                const createUrl =
+                    "https://fombackend.azurewebsites.net/api/diary/create";
                 const createdAt = selectedDate + "T00:00:00";
                 await axios.put(createUrl, {
                     user_id: user.user_id,
@@ -310,26 +314,38 @@ const CalendarPage = () => {
     const [isKeyboardOpen, setIsKeyboardOpen] = useState(false); // 🔹 키보드 열림 여부
 
     useEffect(() => {
-    const handleViewportResize = () => {
-        if (window.visualViewport) {
-        const viewportHeight = window.visualViewport.height;
-        const windowHeight = window.innerHeight;
-        setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
-        }
-    };
+        const handleViewportResize = () => {
+            if (window.visualViewport) {
+                const viewportHeight = window.visualViewport.height;
+                const windowHeight = window.innerHeight;
+                setIsKeyboardOpen(viewportHeight < windowHeight - 100); // 100px 여유
+            }
+        };
 
-    if (window.visualViewport) {
-        window.visualViewport.addEventListener("resize", handleViewportResize);
-        window.visualViewport.addEventListener("scroll", handleViewportResize);
-        handleViewportResize(); // 초기 감지
-    }
-
-    return () => {
         if (window.visualViewport) {
-        window.visualViewport.removeEventListener("resize", handleViewportResize);
-        window.visualViewport.removeEventListener("scroll", handleViewportResize);
+            window.visualViewport.addEventListener(
+                "resize",
+                handleViewportResize
+            );
+            window.visualViewport.addEventListener(
+                "scroll",
+                handleViewportResize
+            );
+            handleViewportResize(); // 초기 감지
         }
-    };
+
+        return () => {
+            if (window.visualViewport) {
+                window.visualViewport.removeEventListener(
+                    "resize",
+                    handleViewportResize
+                );
+                window.visualViewport.removeEventListener(
+                    "scroll",
+                    handleViewportResize
+                );
+            }
+        };
     }, []);
 
     /* ─────────────── 렌더링 ─────────────── */
@@ -354,8 +370,9 @@ const CalendarPage = () => {
             row.push(
                 <td key={j}>
                     {valid ? (
-                        <button onClick={() => openPopup(dateStr)}
-                        className={isToday ? styles.today : undefined}
+                        <button
+                            onClick={() => openPopup(dateStr)}
+                            className={isToday ? styles.today : undefined}
                         >
                             {day}
                         </button>
@@ -457,52 +474,64 @@ const CalendarPage = () => {
                         일주일의 나의 감정
                     </div>
                     <div className={styles["chart-bars"]}>
-                      {Array.from({ length: 7 }).map((_, idx) => {
-                        const dateStr = (() => {
-                          const today = new Date();
-                          const d = new Date(today);
-                          d.setDate(today.getDate() - 6 + idx);
-                          return d;
-                        })();
-                        const dayName = DAYS[dateStr.getDay()];
-                        const dayNum = String(dateStr.getDate()).padStart(2, "0");
-                        const emotion = emotionData.find(e => {
-                          if (!e.created_at) return false;
-                          const eDate = new Date(e.created_at);
-                          return (
-                            eDate.getFullYear() === dateStr.getFullYear() &&
-                            eDate.getMonth() === dateStr.getMonth() &&
-                            eDate.getDate() === dateStr.getDate()
-                          );
-                        });
-                        let offset = 0;
-                        return (
-                          <div key={dayName + dayNum} className={styles["chart-column"]}>
-                            {emotion
-                              ? Object.entries(EMOTION_COLORS).map(([emo, color]) => {
-                                  const val = emotion[emo] ?? 0;
-                                  const bar = (
-                                    <div
-                                      key={emo}
-                                      className={styles.bar}
-                                      style={{
-                                        backgroundColor: color,
-                                        height: `${val}px`,
-                                        bottom: `${offset}px`,
-                                      }}
-                                    />
-                                  );
-                                  offset += val;
-                                  return bar;
-                                })
-                              : null}
-                            <div className={styles["day-label"]}>
-                              <div>{dayName}</div>
-                              <div className={styles["day-date"]}>{dayNum}일</div>
-                            </div>
-                          </div>
-                        );
-                      })}
+                        {Array.from({ length: 7 }).map((_, idx) => {
+                            const dateStr = (() => {
+                                const today = new Date();
+                                const d = new Date(today);
+                                d.setDate(today.getDate() - 6 + idx);
+                                return d;
+                            })();
+                            const dayName = DAYS[dateStr.getDay()];
+                            const dayNum = String(dateStr.getDate()).padStart(
+                                2,
+                                "0"
+                            );
+                            const emotion = emotionData.find((e) => {
+                                if (!e.created_at) return false;
+                                const eDate = new Date(e.created_at);
+                                return (
+                                    eDate.getFullYear() ===
+                                        dateStr.getFullYear() &&
+                                    eDate.getMonth() === dateStr.getMonth() &&
+                                    eDate.getDate() === dateStr.getDate()
+                                );
+                            });
+                            let offset = 0;
+                            return (
+                                <div
+                                    key={dayName + dayNum}
+                                    className={styles["chart-column"]}
+                                >
+                                    {emotion
+                                        ? Object.entries(EMOTION_COLORS).map(
+                                              ([emo, color]) => {
+                                                  const val = emotion[emo] ?? 0;
+                                                  const bar = (
+                                                      <div
+                                                          key={emo}
+                                                          className={styles.bar}
+                                                          style={{
+                                                              backgroundColor:
+                                                                  color,
+                                                              height: `${val}px`,
+                                                              bottom: `${offset}px`,
+                                                          }}
+                                                      />
+                                                  );
+                                                  offset += val;
+                                                  return bar;
+                                              }
+                                          )
+                                        : null}
+                                    <div className={styles["day-label"]}>
+                                        <div>{dayName}</div>
+                                        <div className={styles["day-date"]}>
+                                            {dayNum}일
+                                        </div>
+                                    </div>
+                                </div>
+                            );
+                        })}
                     </div>
                     <div className={styles.legend}>
                         {Object.entries(EMOTION_COLORS).map(([k, c]) => (
@@ -585,7 +614,17 @@ const CalendarPage = () => {
                             {isConsulting ? (
                                 <button
                                     className={`${styles["popup-button"]} ${styles.save}`}
-                                    onClick={() => navigate("/connselbot")}
+                                    onClick={() => {
+                                        const content =
+                                            originalDiaryContent[0]?.content ??
+                                            "";
+                                        const prompt = content.trim()
+                                            ? `${content}\n\n위 일기 내용으로 상담 부탁해`
+                                            : "\n\n상담 부탁해";
+                                        navigate("/connselbot", {
+                                            state: { prompt },
+                                        });
+                                    }}
                                 >
                                     더 상담하기
                                 </button>
