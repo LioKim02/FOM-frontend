@@ -218,9 +218,7 @@ const CalendarPage = () => {
       !originalDiaryContent[0]?.content
     ) {
       setIsConsulting(true);
-      setDiaryPopupContent([
-        { content: "해당 날짜의 상담 보고서가 없습니다." },
-      ]);
+      setDiaryPopupContent([{ content: "포미의 한마디가 없습니다." }]);
       return;
     }
 
