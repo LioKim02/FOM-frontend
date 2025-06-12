@@ -187,9 +187,9 @@
   border: none;
   cursor: pointer;
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
-  display: block;
-  margin: 0 auto 8px;
   transition: transform 0.2s ease;
+  margin-bottom: 32px; /* ✅ FAB 버튼과 간격 확보 */
+  z-index: 10;
 }
 
 .add-diary-btn:hover {
@@ -198,14 +198,20 @@
 
 .bottom-icons {
   position: fixed;
-  bottom: 60px;
+  bottom: 32px;
   left: 0;
   right: 0;
   display: flex;
+  flex-direction: column;
+  align-items: center;
+  z-index: 50;
+}
+
+.fab-group {
+  display: flex;
+  gap: 24px;
   justify-content: center;
   align-items: center;
-  gap: 24px;
-  z-index: 30;
 }
 
 .fab-button {

@@ -89,7 +89,7 @@ const Gallery = () => {
           .map((entry) => ({
             photo: entry.photo,
             created_at: entry.created_at,
-            summary: entry.content,
+            summary: entry.summary,
             diary_id: entry.diary_id,
             isShared: sharedDiaryIds.includes(entry.diary_id),
           }))
@@ -102,14 +102,14 @@ const Gallery = () => {
           .map((entry) => ({
             photo: entry.photo,
             created_at: entry.created_at || new Date(), // 백엔드에 따라 조정
-            anonymous_summary: entry.summary,
+            content: entry.content,
             diary_id: entry.diary_id,
           }))
           .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔹 최신순 정렬 추가
 
         setSharedGallery(formattedShared);
       } catch (error) {
-        console.error("❌ 갤러리 로딩 실패:", error);
+        console.error("갤러리 로딩 실패:", error);
       } finally {
         setIsLoading(false);
       }
@@ -155,7 +155,7 @@ const Gallery = () => {
 
       setPopupData(null);
     } catch (error) {
-      console.error("❌ 삭제 처리 중 오류:", error);
+      console.error("삭제 처리 중 오류:", error);
     } finally {
       setIsLoading(false);
     }
@@ -195,7 +195,7 @@ const Gallery = () => {
           `https://fombackend.azurewebsites.net/api/image/delete/${id}`
         );
       } catch (error) {
-        console.error(`❌ diary_id ${id} 삭제 실패:`, error);
+        console.error(`diary_id ${id} 삭제 실패:`, error);
       }
     }
 
@@ -220,7 +220,7 @@ const Gallery = () => {
       {
         diary_id: popupData.diary_id,
         photo: popupData.photo,
-        content: popupData.summary, // anonymous_summary 대신 summary
+        content: popupData.content, // anonymous_summary 대신 summary
         created_at: new Date().toISOString(),
         flag: true,
       },
@@ -468,9 +468,7 @@ const Gallery = () => {
               )}
             </div>
             <div className={styles["popup-summary"]}>
-              {selectedTab === "shared"
-                ? popupData.anonymous_summary
-                : popupData.summary}
+              {selectedTab === "shared" ? popupData.content : popupData.summary}
             </div>
           </div>
         </div>

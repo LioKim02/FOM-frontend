@@ -102,7 +102,7 @@ const RecordEdit = () => {
 
   const handleSave = async () => {
     if (!diaryId) {
-      alert("수정할 일기의 ID정보가 없습니다.");
+      alert("수정할 일기의 ID 정보가 없습니다.");
       return;
     }
 
