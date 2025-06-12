@@ -218,9 +218,7 @@ const CalendarPage = () => {
       !originalDiaryContent[0]?.content
     ) {
       setIsConsulting(true);
-      setDiaryPopupContent([
-        { content: "해당 날짜의 상담 보고서가 없습니다." },
-      ]);
+      setDiaryPopupContent([{ content: "포미의 한마디가 없습니다." }]);
       return;
     }
 
@@ -299,7 +297,7 @@ const CalendarPage = () => {
       setOriginalDiaryContent([]);
       setDiaryId(null);
     } catch (error) {
-      console.error("❌ 삭제 실패:", error);
+      console.error("삭제 실패:", error);
     } finally {
       setIsLoading(false);
       setShowDeleteConfirm(false);
@@ -590,7 +588,7 @@ const CalendarPage = () => {
                     const prompt = content.trim()
                       ? `${content}\n\n위 일기 내용으로 상담 부탁해`
                       : "\n\n상담 부탁해";
-                    navigate("/connselbot", {
+                    navigate("/counselbot", {
                       state: { prompt },
                     });
                   }}

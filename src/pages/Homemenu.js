@@ -48,7 +48,7 @@ const menuItems = [
     title: "상담받기",
     image: homemenu3,
     className: "counseling-icon",
-    route: "/connselbot",
+    route: "/counselbot",
     initPrompt: null,
   },
   {

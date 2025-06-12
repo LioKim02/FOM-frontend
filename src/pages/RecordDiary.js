@@ -33,10 +33,10 @@ const RecordDiary = () => {
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
         setDiaries(sortedData);
-        console.log("✅ diaries 데이터 가져오기 성공:", sortedData);
+        console.log("diaries 데이터 가져오기 성공:", sortedData);
       } catch (error) {
         console.error(
-          "❌ diaries API 에러:",
+          "diaries API 에러:",
           error.response?.data || error.message
         );
       } finally {
@@ -47,7 +47,7 @@ const RecordDiary = () => {
     if (user?.user_id) {
       fetchDiaries(user.user_id);
     } else {
-      console.warn("⚠️ 사용자 아이디가 없습니다.");
+      console.warn("사용자 아이디가 없습니다.");
     }
   }, [user?.user_id, setIsLoading]);
 
@@ -91,9 +91,9 @@ const RecordDiary = () => {
         await axios.delete(
           `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${id}`
         );
-        console.log(`✅ ID ${id} 삭제 성공`);
+        console.log(`ID ${id} 삭제 성공`);
       } catch (error) {
-        console.error(`❌ ID ${id} 삭제 실패:`, error);
+        console.error(`ID ${id} 삭제 실패:`, error);
       }
     }
 
@@ -103,7 +103,7 @@ const RecordDiary = () => {
       );
       setDiaries(response.data);
     } catch (error) {
-      console.error("❌ diaries 재조회 실패:", error);
+      console.error("diaries 재조회 실패:", error);
     }
 
     setSelectedIds([]);
@@ -222,16 +222,50 @@ const RecordDiary = () => {
           ))
         )}
       </div>
+      <div className={styles["bottom-icons"]}>
+        {/* ✅ 일기 완성 버튼 - 가장 위에 표시 */}
+        <button
+          className={styles["add-diary-btn"]}
+          onClick={() => {
+            setIsLoading(true);
+            navigate("/recordsummary", { state: { diaries } });
+          }}
+        >
+          일기 완성
+        </button>
 
-      <button
-        className={styles["add-diary-btn"]}
-        onClick={() => {
-          setIsLoading(true); // 🔹 요약 이동 시 로딩
-          navigate("/recordsummary", { state: { diaries } });
-        }}
-      >
-        일기 완성
-      </button>
+        {/* ✅ FAB 버튼 3개 */}
+        <div className={styles["fab-group"]}>
+          <img
+            src={WriteIcon}
+            alt="텍스트 작성"
+            className={styles["fab-button"]}
+            onClick={() => {
+              setIsLoading(true);
+              navigate("/recordgen");
+            }}
+          />
+          <img
+            src={MicIcon}
+            alt="음성 입력"
+            className={styles["fab-button"]}
+            onClick={() => {
+              setIsLoading(true);
+              navigate("/recordgen", { state: { mic: true } });
+            }}
+          />
+          <img
+            src={CalendarIcon}
+            alt="캘린더"
+            className={styles["fab-button"]}
+            onClick={() => {
+              setIsLoading(true);
+              navigate("/calendar", { state: { selectedDate: "_blank" } });
+            }}
+          />
+        </div>
+      </div>
+
       {/* ✅ 삭제 확인 팝업창 */}
       {confirmDelete && (
         <div
@@ -269,36 +303,6 @@ const RecordDiary = () => {
           </div>
         </div>
       )}
-
-      <div className={styles["bottom-icons"]}>
-        <img
-          src={WriteIcon}
-          alt="텍스트 작성"
-          className={styles["fab-button"]}
-          onClick={() => {
-            setIsLoading(true); // 🔹 텍스트 작성 이동
-            navigate("/recordgen");
-          }}
-        />
-        <img
-          src={MicIcon}
-          alt="음성 입력"
-          className={styles["fab-button"]}
-          onClick={() => {
-            setIsLoading(true); // 🔹 음성 입력 이동
-            navigate("/recordgen", { state: { mic: true } });
-          }}
-        />
-        <img
-          src={CalendarIcon}
-          alt="캘린더"
-          className={styles["fab-button"]}
-          onClick={() => {
-            setIsLoading(true); // 🔹 캘린더 이동
-            navigate("/calendar", { state: { selectedDate: "_blank" } }); // ✅ 팝업 방지
-          }}
-        />
-      </div>
     </div>
   );
 };

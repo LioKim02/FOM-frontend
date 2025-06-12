@@ -5,9 +5,9 @@ import axios from "axios";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
 
-import styles from "./Connselbot.module.css";
+import styles from "./CounselBot.module.css";
 
-const Connselbot = () => {
+const CounselBot = () => {
   const [messages, setMessages] = useState([]);
   const [input, setInput] = useState("");
   const [loading, setLoading] = useState(false);
@@ -144,4 +144,4 @@ const Connselbot = () => {
   );
 };
 
-export default Connselbot;
+export default CounselBot;
