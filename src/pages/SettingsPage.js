@@ -98,7 +98,7 @@ const SettingsPage = () => {
       }
     } catch (error) {
       console.error("회원 정보 불러오기 실패:", error);
-      alert("사용자 정보를 입력하고 다시 들어와 주세요.");
+      alert("사용자 정보를 입력하고, 나갔다 다시 들어와 주세요.");
     }
     setIsLoading(false);
   };
@@ -174,7 +174,7 @@ const SettingsPage = () => {
       setEditable(false);
       setOriginalEmail(email);
       setPassword("");
-      alert("로그인 정보가 수정되었습니다.");
+      alert("로그인 정보 수정 완료");
     } catch (error) {
       console.error("로그인 수정 에러:", error);
       alert("로그인 수정 실패");
@@ -195,7 +195,7 @@ const SettingsPage = () => {
         }
       );
       setImageEditable(false);
-      alert("사용자 정보가 수정되었습니다.");
+      alert("사용자 정보 수정 완료");
     } catch (error) {
       console.error("사용자 정보 수정 실패:", error);
       alert("사용자 정보 수정 실패");
@@ -215,7 +215,7 @@ const SettingsPage = () => {
         `https://fombackend.azurewebsites.net/api/users/reference/${user_id}`,
         { reference_text: selectedText }
       );
-      alert("일기 문체가 수정되었습니다.");
+      alert("일기 문체 수정 완료");
     } catch (error) {
       console.error("일기 문체 수정 실패:", error);
       alert("일기 문체 수정 실패");

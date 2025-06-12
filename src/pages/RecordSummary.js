@@ -100,7 +100,7 @@ const RecordSummary = () => {
       setSummary(response.data["일기 변환"]);
     } catch (error) {
       console.error("AI 편집 실패:", error);
-      alert("AI 요청에 실패했습니다.");
+      alert("AI 일기 완성에 실패했습니다.");
     } finally {
       setIsLoading(false); // 🔹 로딩 종료
     }

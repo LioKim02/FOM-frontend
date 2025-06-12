@@ -101,7 +101,7 @@ const ImageGen = () => {
         { photo: imageUrl }
       );
 
-      alert("저장 성공했습니다.");
+      alert("이미지 저장 완료");
       navigate("/gallery");
     } catch (err) {
       alert("저장 실패: " + (err?.response?.data?.message || err.message));
