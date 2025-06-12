@@ -33,10 +33,10 @@ const RecordDiary = () => {
           (a, b) => new Date(b.created_at) - new Date(a.created_at)
         );
         setDiaries(sortedData);
-        console.log("✅ diaries 데이터 가져오기 성공:", sortedData);
+        console.log("diaries 데이터 가져오기 성공:", sortedData);
       } catch (error) {
         console.error(
-          "❌ diaries API 에러:",
+          "diaries API 에러:",
           error.response?.data || error.message
         );
       } finally {
@@ -47,7 +47,7 @@ const RecordDiary = () => {
     if (user?.user_id) {
       fetchDiaries(user.user_id);
     } else {
-      console.warn("⚠️ 사용자 아이디가 없습니다.");
+      console.warn("사용자 아이디가 없습니다.");
     }
   }, [user?.user_id, setIsLoading]);
 
@@ -91,9 +91,9 @@ const RecordDiary = () => {
         await axios.delete(
           `https://fombackend.azurewebsites.net/api/temp_diary/delete?temp_diary_id=${id}`
         );
-        console.log(`✅ ID ${id} 삭제 성공`);
+        console.log(`ID ${id} 삭제 성공`);
       } catch (error) {
-        console.error(`❌ ID ${id} 삭제 실패:`, error);
+        console.error(`ID ${id} 삭제 실패:`, error);
       }
     }
 
@@ -103,7 +103,7 @@ const RecordDiary = () => {
       );
       setDiaries(response.data);
     } catch (error) {
-      console.error("❌ diaries 재조회 실패:", error);
+      console.error("diaries 재조회 실패:", error);
     }
 
     setSelectedIds([]);

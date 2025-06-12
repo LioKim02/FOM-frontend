@@ -98,7 +98,7 @@ const SettingsPage = () => {
       }
     } catch (error) {
       console.error("회원 정보 불러오기 실패:", error);
-      alert("사용자 정보를 입력하고, 나갔다 다시 들어와 주세요.");
+      alert("사용자 정보 입력 후, 나갔다가 다시 들어와 주세요.");
     }
     setIsLoading(false);
   };

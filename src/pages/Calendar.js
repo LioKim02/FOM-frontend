@@ -299,7 +299,7 @@ const CalendarPage = () => {
       setOriginalDiaryContent([]);
       setDiaryId(null);
     } catch (error) {
-      console.error("❌ 삭제 실패:", error);
+      console.error("삭제 실패:", error);
     } finally {
       setIsLoading(false);
       setShowDeleteConfirm(false);
@@ -590,7 +590,7 @@ const CalendarPage = () => {
                     const prompt = content.trim()
                       ? `${content}\n\n위 일기 내용으로 상담 부탁해`
                       : "\n\n상담 부탁해";
-                    navigate("/connselbot", {
+                    navigate("/counselbot", {
                       state: { prompt },
                     });
                   }}

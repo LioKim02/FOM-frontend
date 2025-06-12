@@ -109,7 +109,7 @@ const Gallery = () => {
 
         setSharedGallery(formattedShared);
       } catch (error) {
-        console.error("❌ 갤러리 로딩 실패:", error);
+        console.error("갤러리 로딩 실패:", error);
       } finally {
         setIsLoading(false);
       }
@@ -155,7 +155,7 @@ const Gallery = () => {
 
       setPopupData(null);
     } catch (error) {
-      console.error("❌ 삭제 처리 중 오류:", error);
+      console.error("삭제 처리 중 오류:", error);
     } finally {
       setIsLoading(false);
     }
@@ -195,7 +195,7 @@ const Gallery = () => {
           `https://fombackend.azurewebsites.net/api/image/delete/${id}`
         );
       } catch (error) {
-        console.error(`❌ diary_id ${id} 삭제 실패:`, error);
+        console.error(`diary_id ${id} 삭제 실패:`, error);
       }
     }
 
