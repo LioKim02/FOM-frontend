@@ -101,11 +101,13 @@ const Gallery = () => {
         const formattedShared = sharedData
           .map((entry) => ({
             photo: entry.photo,
-            created_at: entry.created_at || new Date(), // 백엔드에 따라 조정
+            created_at: entry.created_at
+              ? new Date(entry.created_at).toISOString() // ✅ 문자열 보장
+              : new Date().toISOString(), // ✅ fallback도 문자열
             content: entry.content,
             diary_id: entry.diary_id,
           }))
-          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at)); // 🔹 최신순 정렬 추가
+          .sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
 
         setSharedGallery(formattedShared);
       } catch (error) {
@@ -206,37 +208,47 @@ const Gallery = () => {
 
   const handleShareConfirm = async () => {
     setIsLoading(true);
-    await axios.post(
-      "https://fombackend.azurewebsites.net/api/share_diary/create",
-      {
-        diary_id: popupData.diary_id,
-        created_at: new Date().toISOString(),
+    try {
+      // 1. 공유 요청
+      await axios.post(
+        "https://fombackend.azurewebsites.net/api/share_diary/create",
+        {
+          diary_id: popupData.diary_id,
+          created_at: new Date().toISOString(),
+        }
+      );
+
+      // 2. 공유 직후 shared_diaries 재요청하여 익명 요약 포함된 데이터 가져오기
+      const sharedResponse = await axios.get(
+        "https://fombackend.azurewebsites.net/api/shared_diaries/get"
+      );
+
+      // 3. 해당 diary_id에 해당하는 데이터만 추출
+      const newSharedItem = sharedResponse.data.find(
+        (entry) => entry.diary_id === popupData.diary_id
+      );
+
+      // 4. sharedGallery에 추가
+      if (newSharedItem) {
+        setSharedGallery((prev) => [...prev, newSharedItem]);
       }
-    );
 
-    // 갤러리 상태 업데이트
-    setSharedGallery((prev) => [
-      ...prev,
-      {
-        diary_id: popupData.diary_id,
-        photo: popupData.photo,
-        content: popupData.content, // anonymous_summary 대신 summary
-        created_at: new Date().toISOString(),
-        flag: true,
-      },
-    ]);
+      // 5. myGallery의 isShared 상태 업데이트
+      setMyGallery((prev) =>
+        prev.map((item) =>
+          item.diary_id === popupData.diary_id
+            ? { ...item, isShared: true }
+            : item
+        )
+      );
 
-    setMyGallery((prev) =>
-      prev.map((item) =>
-        item.diary_id === popupData.diary_id
-          ? { ...item, isShared: true }
-          : item
-      )
-    );
-
-    setConfirmShare(false);
-    setPopupData(null);
-    setIsLoading(false);
+      setConfirmShare(false);
+      setPopupData(null);
+    } catch (error) {
+      console.error("공유 처리 중 오류:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   const handleCancelShare = async () => {
