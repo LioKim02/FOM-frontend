@@ -4,6 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import axios from "axios";
 import PreviousArrow from "../components/PreviousArrow";
 import HomeButton from "../components/HomeButton";
+import Settings from "../components/Settings";
 
 import styles from "./CounselBot.module.css";
 
@@ -104,6 +105,7 @@ const CounselBot = () => {
         </div>
         <div className={styles["nav-center"]}>마음상담</div>
         <div className={styles["nav-right"]}>
+          <Settings />
           <HomeButton />
         </div>
       </div>
